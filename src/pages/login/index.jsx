@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import { Form, Input, Button } from 'antd';
+import {Form, Input, Button, message} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-
+import {reqLogin,reqAddUser} from '../../api';
 
 import './index.less'
 import logo from './images/logoE.png'
@@ -11,8 +11,19 @@ import logo from './images/logoE.png'
  */
 class Login extends Component {
 
-    onFinish = (values) => {
-            console.log('Received values of form: ', values);
+    onFinish = async (values) => {
+        const {username, password} = values;
+        const result = await reqLogin(username, password);
+
+        if(result.status === 0) {
+            message.success("success");
+
+            this.props.history.replace("/admin");
+        }else {
+            message.error("failed");
+            this.props.history.redirect("/login");
+        }
+
     };
 
 
