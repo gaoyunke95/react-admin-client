@@ -5,6 +5,9 @@ import {reqLogin,reqAddUser} from '../../api';
 
 import './index.less'
 import logo from './images/logoE.png'
+import memoryUtil from '../../utils/memoryUtil';
+import storageUtil from '../../utils/storageUtil';
+import {Redirect} from 'react-router-dom';
 
 /**
  * Login router component
@@ -17,17 +20,23 @@ class Login extends Component {
 
         if(result.status === 0) {
             message.success("success");
+            const user = result.data;
 
+            memoryUtil.user = user;
+            storageUtil.saveUser(user);
             this.props.history.replace("/admin");
         }else {
             message.error("failed");
-            this.props.history.redirect("/login");
         }
 
     };
 
 
     render() {
+        const user = memoryUtil.user;
+        if(user && user._id){
+            return <Redirect to='/admin'/>
+        }
         return (
             <div className="login">
                 <header className="login-header">
